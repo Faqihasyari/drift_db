@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:moor_db/app/data/db/note_db.dart';
+import 'package:moor_db/app/modules/home/controllers/home_controller.dart';
 
 import '../controllers/add_note_controller.dart';
 
 class AddNoteView extends GetView<AddNoteController> {
-  NoteDb NoteM = Get.arguments;
+  final HomeController homeC = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +40,7 @@ class AddNoteView extends GetView<AddNoteController> {
                   onPressed: () async {
                     if (controller.isLoading.isFalse) {
                       controller.isLoading.value = true;
-                      await NoteM.insertNote(Note(title: controller.titleController.text, desc: controller.descriptionController.text));
+                      await homeC.NoteM.insertNote(Note(title: controller.titleController.text, desc: controller.descriptionController.text));
                       controller.isLoading.value = false;
                       Get.back();
                     }

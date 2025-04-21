@@ -7,7 +7,6 @@ import 'package:moor_db/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  NoteDb NoteM = NoteDb();
   HomeView({super.key});
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
       ),
       body: StreamBuilder<List<Note>>(
-          stream: NoteM.streamNotes(),
+          stream: controller.NoteM.streamNotes(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -33,12 +32,14 @@ class HomeView extends GetView<HomeController> {
               itemBuilder: (context, index) {
                 Note note = snapshot.data![index];
                 return ListTile(
-                  onTap: () => Get.toNamed(Routes.EDIT_NOTE, arguments: note),
+                  onTap: () => Get.toNamed(Routes.EDIT_NOTE,
+                      arguments: note),
                   leading: CircleAvatar(
                     child: Text('${note.id}'),
                   ),
-                  trailing:
-                      IconButton(onPressed: () => NoteM.deleteNote(note), icon: Icon(Icons.delete)),
+                  trailing: IconButton(
+                      onPressed: () => controller.NoteM.deleteNote(note),
+                      icon: Icon(Icons.delete)),
                   title: Text("Title ${note.title}"),
                   subtitle: Text("Desc ${note.desc}"),
                 );
@@ -46,7 +47,7 @@ class HomeView extends GetView<HomeController> {
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed(Routes.ADD_NOTE, arguments: NoteM),
+        onPressed: () => Get.toNamed(Routes.ADD_NOTE),
         child: Icon(Icons.add),
       ),
     );
